@@ -97,7 +97,7 @@
     "husky": "^3.1.0",
     "jest": "^27.4.7",
     "lerna": "^5.5.1",
-    "lint-staged": "^10.4.0",
+    "lint-staged": "^13.2.1",
     "live-server": "^1.2.1",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.5",
