@@ -44,15 +44,20 @@ export function main(config) {
     '</button>' +
     '<aside class="sidebar">' +
     (config.name
-      ? `<h1 class="app-name"><a class="app-name-link" data-nosearch>${
-          config.logo ? `<img alt="${name}" src=${config.logo}>` : name
-        }</a></h1>`
+      ? `<h1 class="app-name"><a class="app-name-link" data-nosearch>${config.logo ? `<img alt="${name}" src=${config.logo}>` : name
+      }</a></h1>`
       : '') +
     '<div class="sidebar-nav"><!--sidebar--></div>' +
     '</aside>';
+
+  const rightTOC = '<div id="rightTOC" class="rightTOC">' +
+    '<ul></ul>' +
+    '</div>';
+
   return (
     `<main>${aside}` +
     '<section class="content">' +
+      rightTOC +
     '<article class="markdown-section" id="main"><!--main--></article>' +
     '</section>' +
     '</main>'
@@ -77,6 +82,8 @@ export function cover() {
     '</section>'
   );
 }
+
+
 
 /**
  * Render tree

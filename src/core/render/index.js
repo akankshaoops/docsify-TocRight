@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+//44-94 for renderMain
+//234-337 export rendder
 import tinydate from 'tinydate';
 import * as dom from '../util/dom';
 import cssVars from '../util/polyfill/css-vars';
@@ -7,6 +9,7 @@ import { getPath, isAbsolutePath } from '../router/util';
 import { isMobile, inBrowser } from '../util/env';
 import { isPrimitive, merge } from '../util/core';
 import { scrollActiveSidebar } from '../event/scroll';
+import { initRightTOC, destroyRightTOC } from '../event/rightTOC';
 import { Compiler } from './compiler';
 import * as tpl from './tpl';
 import { prerenderEmbed } from './embed';
@@ -34,8 +37,8 @@ function formatUpdated(html, updated, fn) {
     typeof fn === 'function'
       ? fn(updated)
       : typeof fn === 'string'
-      ? tinydate(fn)(new Date(updated))
-      : updated;
+        ? tinydate(fn)(new Date(updated))
+        : updated;
 
   return html.replace(/{docsify-updated}/g, updated);
 }
@@ -74,7 +77,11 @@ function renderMain(html) {
     }
   }
 
+  destroyRightTOC();
   this._renderTo(markdownElm, html);
+  initRightTOC();
+
+
 
   // Render sidebar with the TOC
   !docsifyConfig.loadSidebar && this._renderSidebar();
@@ -125,24 +132,7 @@ function renderMain(html) {
     // Template syntax, vueComponents, vueGlobalOptions
     if (docsifyConfig.vueGlobalOptions || vueComponentNames.length) {
       const reHasBraces = /{{2}[^{}]*}{2}/;
-      // Matches Vue full and shorthand syntax as attributes in HTML tags.
-      //
-      // Full syntax examples:
-      // v-foo, v-foo[bar], v-foo-bar, v-foo:bar-baz.prop
-      //
-      // Shorthand syntax examples:
-      // @foo, @foo.bar, @foo.bar.baz, @[foo], :foo, :[foo]
-      //
-      // Markup examples:
-      // <div v-html>{{ html }}</div>
-      // <div v-text="msg"></div>
-      // <div v-bind:text-content.prop="text">
-      // <button v-on:click="doThis"></button>
-      // <button v-on:click.once="doThis"></button>
-      // <button v-on:[event]="doThis"></button>
-      // <button @click.stop.prevent="doThis">
-      // <a :href="url">
-      // <a :[key]="url">
+
       const reHasDirective = /<[^>/]+\s([@:]|v-)[\w-:.[\]]+[=>\s]/;
 
       vueMountData.push(
@@ -155,7 +145,7 @@ function renderMain(html) {
             const isVueMount =
               // is a component
               elm.tagName.toLowerCase() in
-                (docsifyConfig.vueComponents || {}) ||
+              (docsifyConfig.vueComponents || {}) ||
               // has a component(s)
               elm.querySelector(vueComponentNames.join(',') || null) ||
               // has curly braces
@@ -169,9 +159,7 @@ function renderMain(html) {
             // Clone global configuration
             const vueConfig = merge({}, docsifyConfig.vueGlobalOptions || {});
 
-            // Replace vueGlobalOptions data() return value with shared data object.
-            // This provides a global store for all Vue instances that receive
-            // vueGlobalOptions as their configuration.
+
             if (vueGlobalData) {
               vueConfig.data = function () {
                 return vueGlobalData;
@@ -463,7 +451,10 @@ export function Render(Base) {
       }
 
       this._updateRender();
+
       dom.toggleClass(dom.body, 'ready');
+
+
     }
   };
 }

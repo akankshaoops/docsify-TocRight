@@ -37,6 +37,9 @@ export default function (vm) {
       subMaxLevel: 0,
       themeColor: '',
       topMargin: 0,
+      rightTOC: false, 
+      
+
     },
     typeof window.$docsify === 'function'
       ? window.$docsify(vm)
